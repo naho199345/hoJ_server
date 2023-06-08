@@ -8,7 +8,7 @@ export const swagger = (app: INestApplication): void => {
     SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('innerviewon API Document')
+        .setTitle('hoJ API Document')
         .setDescription('a video interview System API description')
         .setVersion('1.0')
         .addBearerAuth()

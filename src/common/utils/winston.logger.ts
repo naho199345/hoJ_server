@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 
-const logDir = path.join(__dirname, '..', '..', '..', 'external-vol/innerviewon-server', 'logs');
+const logDir = path.join(__dirname, '..', '..', '..', 'external-vol/hoJ-server', 'logs');
 
 const commonConfig = {
   datePattern: 'YYYY-MM-DD',
@@ -38,7 +38,7 @@ export const winstonLogger = (): LoggerService => {
         level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
         format: winston.format.combine(
           winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          nestWinstonModuleUtilities.format.nestLike('innerviewon', {
+          nestWinstonModuleUtilities.format.nestLike('hoJ', {
             prettyPrint: true,
           }),
         ),

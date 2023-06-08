@@ -3,19 +3,38 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true, // https://github.com/Microsoft/TypeScript/issues/2577
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2019",
     "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
+    "outDir": "dist",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "esModuleInterop": true,
+    //
+    "moduleResolution": "node",
+    "strictPropertyInitialization": false,
+    "strict": true //= alwaysStrict, strictNullChecks, strictBindCallApply, strictFunctionTypes, strictPropertyInitialization, noImplicitAny, noImplicitThis, useUnknownInCatchVariables
+    // [sealed]
+    // "paths": {}
+    // "newLine": "lf",
+    // "allowUnreachableCode": false,
+    // "allowUnusedLabels": false,
+    // "noFallthroughCasesInSwitch": true,
+    // "noImplicitOverride": true,
+    // "noImplicitReturns": true,
+    // "forceConsistentCasingInFileNames": true
+    // [unused]
+    // "exactOptionalPropertyTypes": true,
+    // "importsNotUsedAsValues": "error",
+    // "noPropertyAccessFromIndexSignature": true,
+    // "noUncheckedIndexedAccess": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+  },
+  "include": ["./@types", "src/**/*", "test/**/*"],
+  "typeRoots": ["./@types", "./node_modules/@types"],
+  "exclude": ["node_modules"]
 }

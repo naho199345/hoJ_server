@@ -2,6 +2,12 @@
 /dist
 /node_modules
 
+# dotenv environment variable files
+.env.dev
+.env.test
+.env.production
+
+
 # Logs
 logs
 *.log

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ErrorMessage } from 'src/common/enums';
 
@@ -25,6 +25,11 @@ export class SignUpDto {
   @ApiProperty({ default: '김승호' })
   @IsNotEmpty()
   readonly name: string;
+
+  @IsString()
+  @ApiProperty({ default: '010-1234-1234' })
+  @IsNotEmpty()
+  readonly phoneNum: string;
 
   @IsString()
   @ApiProperty({ default: 'snssnsksk12@naver.com' })
@@ -102,22 +107,4 @@ export class ResetPwdDto {
     message: ErrorMessage.auth_Insert_004,
   })
   readonly newPwd: string;
-}
-
-export class FindUserByIdDto {
-  @IsNumber()
-  @ApiProperty({ default: 1 })
-  readonly id: number;
-}
-
-export class GetCatchTokenDto {
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ default: 'apply011' })
-  readonly account: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ default: 'asdfasdf22@naver.com' })
-  readonly email: string;
 }

@@ -1,10 +1,7 @@
-import { Role } from '../enums/Role';
-
 export interface Payload {
   id: number;
   account: string;
   name: string;
-  role: Role;
 }
 
 // dev용

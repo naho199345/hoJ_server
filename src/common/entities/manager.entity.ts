@@ -21,6 +21,9 @@ export class User extends BaseEntity {
   @Column({ type: 'char', length: 1, nullable: true, default: '0' })
   isChgPwd: string;
 
+  @Column({ type: 'char', length: 1 })
+  isPaymentStep: string;
+
   @CreateDateColumn()
   regDt: Date;
 }

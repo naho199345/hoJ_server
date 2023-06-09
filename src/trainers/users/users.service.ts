@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { AccountDto, FindUserByIdDto, SetPwdDto, SignUpDto } from './dto/users.dto';
+import { AccountDto, SetPwdDto, SignUpDto } from './dto/users.dto';
 import { ErrorMessage, Role } from 'src/common/enums';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
@@ -20,15 +20,10 @@ export class UsersService {
 
   private isDev = process.env.NODE_ENV === undefined;
 
-  async interviewerSignUp(signUpData: SignUpDto): Promise<void> {
-    const roleIdentify = 0;
-    const { account, pwd, name, regId } = signUpData;
-    const encAccount = this.cryptoService.encryptString(account);
-    const encRegId = this.cryptoService.encryptString(regId);
+  async signUp(signUpData: SignUpDto): Promise<void> {
+    const { account, pwd, name, phoneNum } = signUpData;
 
-    const encName = this.cryptoService.encryptString(name);
-
-    const existingUser = await User.findOne({ where: { account: encAccount }, select: ['account'] });
+    const existingUser = await User.findOne({ where: { account }, select: ['account'] });
 
     if (existingUser) {
       throw new ConflictException(`${ErrorMessage.auth_Insert_001} ${name}(${account})`);
@@ -37,12 +32,12 @@ export class UsersService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(pwd, salt);
     const newUser = User.create({
-      account: encAccount,
+      account,
       pwd: hashedPassword,
-      name: encName,
-      role: roleIdentify === 0 ? Role.MANAGER : Role.USER,
-      regId: encRegId,
+      phoneNum: phoneNum,
+      name,
     });
+
     await newUser.save();
   }
 
@@ -121,20 +116,17 @@ export class UsersService {
   async validateUser(
     userAccount: string,
     userPassword: string,
-  ): Promise<{ id: number; account: string; name: string; role: string }> {
-    const encAccount = this.cryptoService.encryptString(userAccount);
+  ): Promise<{ id: number; account: string; name: string }> {
+    const user = await User.findOne({ where: { account: userAccount } });
+    // if (user.role !== Role.MANAGER) {
+    //   throw new UnauthorizedException(`해당 계정은 ${user.role}으로 등록되어 있습니다.`);
+    // }
 
-    const user = await User.findOne({ where: { account: encAccount } });
-    if (user.role !== Role.MANAGER) {
-      throw new UnauthorizedException(`해당 계정은 ${user.role}으로 등록되어 있습니다.`);
-    }
-
-    if (!user || !(await bcrypt.compare(userPassword, user.pwd))) {
-      throw new UnauthorizedException(ErrorMessage.auth_List_002);
-    }
-    const { id, name, role } = user;
-    const decName = this.cryptoService.decryptString(name);
-    return { id, account: userAccount, name: decName, role };
+    // if (!user || !(await bcrypt.compare(userPassword, user.pwd))) {
+    //   throw new UnauthorizedException(ErrorMessage.auth_List_002);
+    // }
+    const { id, name } = user;
+    return { id, account: userAccount, name };
   }
 
   async signJwt(req: Request, payload: Payload): Promise<string> {
@@ -157,47 +149,15 @@ export class UsersService {
 
   async createToken(req: Request): Promise<{ accessToken: string }> {
     const { account } = req.body;
-    const encAccount = this.cryptoService.encryptString(account);
 
-    const user = await User.findOne({ where: { account: encAccount }, select: ['id', 'account', 'name', 'role'] });
+    const user = await User.findOne({ where: { account }, select: ['id', 'account', 'name'] });
 
     if (!user) {
       throw new HttpException('해당 계정의 방이 존재하지 않습니다.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const { id, name, role } = user;
+    const { id, name } = user;
 
-    if (role === Role.MANAGER) {
-      throw new HttpException('잘못된 접근입니다.', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    const decName = this.cryptoService.decryptString(name);
-
-    const accessToken = await this.signJwt(req, { id, account, name: decName, role });
+    const accessToken = await this.signJwt(req, { id, account, name });
     return { accessToken };
-  }
-
-  async findUserByAccount(accountDto: AccountDto): Promise<any> {
-    const encAccount = this.cryptoService.encryptString(accountDto.account);
-
-    const user = await User.findOne({ where: { account: encAccount }, select: ['id', 'account', 'name', 'role'] });
-
-    const { id, account, name, role } = user;
-
-    const decAccount = this.cryptoService.decryptString(account);
-    const decName = this.cryptoService.decryptString(name);
-
-    return { id, account: decAccount, name: decName, role };
-  }
-
-  async findUserById(findUserByIdDto: FindUserByIdDto): Promise<any> {
-    const { id } = findUserByIdDto;
-    const user = await User.findOne({ where: { id }, select: ['id', 'account', 'name', 'role'] });
-
-    const { account, name, role } = user;
-
-    const decAccount = this.cryptoService.decryptString(account);
-    const decName = this.cryptoService.decryptString(name);
-
-    return { id, account: decAccount, name: decName, role };
   }
 }

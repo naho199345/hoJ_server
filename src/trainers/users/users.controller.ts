@@ -17,8 +17,6 @@ export class UsersController {
   @Post('/signnUp')
   async signUp(@Body() signUpData: SignUpDto): Promise<void> {
     const result = await this.usersService.signUp(signUpData);
-    console.log(result);
-    
     return result;
   }
 

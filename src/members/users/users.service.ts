@@ -125,16 +125,13 @@ export class UsersService {
     const encAccount = this.cryptoService.encryptString(userAccount);
 
     const user = await User.findOne({ where: { account: encAccount } });
-    if (user.role !== Role.MANAGER) {
-      throw new UnauthorizedException(`해당 계정은 ${user.role}으로 등록되어 있습니다.`);
-    }
 
     if (!user || !(await bcrypt.compare(userPassword, user.pwd))) {
       throw new UnauthorizedException(ErrorMessage.auth_List_002);
     }
-    const { id, name, role } = user;
+    const { id, name } = user;
     const decName = this.cryptoService.decryptString(name);
-    return { id, account: userAccount, name: decName, role };
+    return { id, account: userAccount, name: decName, role: user.role };
   }
 
   async signJwt(req: Request, payload: Payload): Promise<string> {

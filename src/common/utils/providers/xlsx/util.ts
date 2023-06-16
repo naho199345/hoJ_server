@@ -25,9 +25,7 @@ const basedate = new Date(1899, 11, 30, 0, 0, 0); // 2209161600000
 
 function datenum(value: Date): number {
   const epoch = value.getTime();
-  const dnthresh =
-    basedate.getTime() +
-    (value.getTimezoneOffset() - basedate.getTimezoneOffset()) * 60000;
+  const dnthresh = basedate.getTime() + (value.getTimezoneOffset() - basedate.getTimezoneOffset()) * 60000;
   return (epoch - dnthresh) / (24 * 60 * 60 * 1000);
 }
 
@@ -44,11 +42,7 @@ function safe_format_cell(cell: CellObject, value: RawValue): string {
   return value?.toString() || '';
 }
 
-function format_cell(
-  cell: CellObject,
-  value: RawValue,
-  sheetOptions: Sheet2JSONOpts,
-): string {
+function format_cell(cell: CellObject, value: RawValue, sheetOptions: Sheet2JSONOpts): string {
   if (!cell || !cell.type || cell.type === 'zEmpty') {
     return '';
   }
@@ -174,35 +168,26 @@ const denseFor = (sheet: WorkSheet): boolean => Array.isArray(sheet);
 
 const validateExcelHeader = (headers: string[], headerName: string): string => {
   if (headers.includes(ExcelColumns[headerName as keyof typeof ExcelColumns])) {
-    throw new BadRequestException(
-      `[${headerName}] 엑셀 타이틀이 중복되었습니다.`,
-    );
+    throw new BadRequestException(`[${headerName}] 엑셀 타이틀이 중복되었습니다.`);
   }
 
   const isValidateExcelColumn = Object.keys(ExcelColumns).includes(headerName);
   if (!isValidateExcelColumn) {
     throw new BadRequestException(
-      `[${headerName}]는 유효한 엑셀 타이틀이 아닙니다. 유효 타이틀: ${Object.keys(
-        ExcelColumns,
-      ).join(', ')}`,
+      `[${headerName}]는 유효한 엑셀 타이틀이 아닙니다. 유효 타이틀: ${Object.keys(ExcelColumns).join(', ')}`,
     );
   }
 
   return ExcelColumns[headerName as keyof typeof ExcelColumns];
 };
 
-const headersFor = (
-  sheet: WorkSheet,
-  sheetOptions: Sheet2JSONOpts,
-): string[] => {
+const headersFor = (sheet: WorkSheet, sheetOptions: Sheet2JSONOpts): string[] => {
   const range = rangeFor(sheet);
   const cols = colsFor(range);
 
   const headers: string[] = [];
   for (let colNum = range.start.column; colNum <= range.end.column; ++colNum) {
-    let cell = denseFor(sheet)
-      ? sheet[range.start.row][colNum]
-      : sheet[cols[colNum] + encode_row(range.start.row)];
+    let cell = denseFor(sheet) ? sheet[range.start.row][colNum] : sheet[cols[colNum] + encode_row(range.start.row)];
     cell = cell || { word: '__EMPTY', type: 'string' };
 
     let headerName = format_cell(cell, null, sheetOptions);
@@ -227,11 +212,7 @@ const enrichDefaultRow = (row: any, rowNum: number): void => {
   }
 };
 
-function make_json_row(
-  sheet: WorkSheet,
-  sheetOptions: Sheet2JSONOpts,
-  rowNum: number,
-): MJRObject {
+function make_json_row(sheet: WorkSheet, sheetOptions: Sheet2JSONOpts, rowNum: number): MJRObject {
   const dense = denseFor(sheet);
   const range = rangeFor(sheet);
 
@@ -239,9 +220,7 @@ function make_json_row(
   const cols = colsFor(range);
 
   const defaultValue = sheetOptions.defval || null;
-  const useRawValue =
-    sheetOptions.raw ||
-    !Object.prototype.hasOwnProperty.call(sheetOptions, 'raw');
+  const useRawValue = sheetOptions.raw || !Object.prototype.hasOwnProperty.call(sheetOptions, 'raw');
 
   let isempty = true;
   const row: any = {};
@@ -256,9 +235,7 @@ function make_json_row(
       continue;
     }
 
-    const cell: CellObject = dense
-      ? sheet[rowNum][colNum]
-      : sheet[cols[colNum] + encode_row(rowNum)];
+    const cell: CellObject = dense ? sheet[rowNum][colNum] : sheet[cols[colNum] + encode_row(rowNum)];
 
     if (cell === undefined || cell.type === undefined) {
       if (defaultValue === undefined) {
@@ -417,11 +394,7 @@ export function sheet_to_json({
 
   const jsonData = [];
   let length = 0;
-  for (
-    let rowNum = range.start.row + offset;
-    rowNum <= range.end.row;
-    ++rowNum
-  ) {
+  for (let rowNum = range.start.row + offset; rowNum <= range.end.row; ++rowNum) {
     const row = make_json_row(sheet, sheetOptions, rowNum);
 
     if (!row.isempty || sheetOptions.blankrows) {

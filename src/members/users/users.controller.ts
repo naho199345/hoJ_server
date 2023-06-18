@@ -12,9 +12,6 @@ import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiHeader({
-    name: 'itvkey',
-  })
   @ApiOperation({ summary: '회원 추가' })
   @ApiExtraModels(SignUpDto)
   @Post('/interviewer')
@@ -31,9 +28,6 @@ export class UsersController {
     return result;
   }
 
-  @ApiHeader({
-    name: 'itvkey',
-  })
   @ApiOperation({ summary: '회원 삭제' })
   @ApiExtraModels(AccountDto)
   @Post('/deleteinterviewer')
@@ -62,9 +56,6 @@ export class UsersController {
     return this.usersService.signOut(req);
   }
 
-  @ApiHeader({
-    name: 'itvkey',
-  })
   @ApiOperation({ summary: 'id 찾기' })
   @ApiExtraModels(AccountDto)
   @Post('finduserbyaccount')
@@ -73,9 +64,6 @@ export class UsersController {
     return result;
   }
 
-  @ApiHeader({
-    name: 'itvkey',
-  })
   @ApiOperation({ summary: 'id 찾기' })
   @ApiExtraModels(AccountDto)
   @Post('finduserbyid')

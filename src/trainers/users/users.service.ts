@@ -92,21 +92,8 @@ export class UsersService {
   }
 
   signOut(req: Request) {
-    const isProduction = process.env.NODE_ENV === 'production';
-    const isTest = process.env.NODE_ENV === 'test';
-    const isDev = process.env.NODE_ENV === 'dev';
-    let domain: string;
-
-    if (isProduction) {
-      domain = 'interview.catchapply.co.kr';
-    } else if (isTest) {
-      domain = 'interview-test.catchapply.co.kr';
-    } else if (isDev) {
-      domain = 'localhost';
-    }
-
     const cookieOptions = {
-      domain: domain,
+      domain: 'localhost',
       path: '/',
       maxAge: 0,
     };

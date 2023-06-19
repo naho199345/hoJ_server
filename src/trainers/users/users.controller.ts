@@ -56,9 +56,6 @@ export class UsersController {
     return this.usersService.signOut(req);
   }
 
-  @ApiHeader({
-    name: 'itvkey',
-  })
   @ApiOperation({ summary: '인담자, 개인회원 토큰생성' })
   @ApiExtraModels(AccountDto)
   @Post('token')

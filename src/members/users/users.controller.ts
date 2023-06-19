@@ -73,9 +73,6 @@ export class UsersController {
     return result;
   }
 
-  @ApiHeader({
-    name: 'itvkey',
-  })
   @ApiOperation({ summary: 'id 찾기' })
   @ApiExtraModels(AccountDto)
   @Post('finduserbyid')

@@ -86,21 +86,8 @@ export class UsersService {
   }
 
   signOut(req: Request) {
-    const isProduction = process.env.NODE_ENV === 'production';
-    const isTest = process.env.NODE_ENV === 'test';
-    const isDev = process.env.NODE_ENV === 'dev';
-    let domain: string;
-
-    if (isProduction) {
-      domain = 'interview.catchapply.co.kr';
-    } else if (isTest) {
-      domain = 'interview-test.catchapply.co.kr';
-    } else if (isDev) {
-      domain = 'localhost';
-    }
-
     const cookieOptions = {
-      domain: domain,
+      domain: 'localhost',
       path: '/',
       maxAge: 0,
     };
@@ -126,11 +113,7 @@ export class UsersService {
       expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRES'),
     });
     try {
-      if (!this.isDev) {
-        req.res.cookie('itvToken', accessToken, { domain: '.catchapply.co.kr', maxAge: 1000 * 60 * 60 * 24 });
-      } else {
-        req.res.cookie('itvToken', accessToken);
-      }
+      req.res.cookie('itvToken', accessToken);
     } catch (error) {
       console.log(error);
     }

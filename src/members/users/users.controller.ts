@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Req, Patch } from '@nestjs/common';
 import { ApiExtraModels, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AccountDto, FindUserByIdDto, SetPwdDto, SignInDto, SignUpDto } from './dto/users.dto';
+import { AccountDto, SetPwdDto, SignInDto, SignUpDto } from './dto/users.dto';
 import { UsersService } from './users.service';
 import { Role } from 'src/common/enums/Role';
 import { Public } from 'src/common/decorators';
@@ -19,7 +19,7 @@ export class UsersController {
   @ApiExtraModels(SignUpDto)
   @Post('/interviewer')
   async interviewerSignUp(@Body() signUpData: SignUpDto): Promise<void> {
-    const result = await this.usersService.interviewerSignUp(signUpData);
+    const result = await this.usersService.memberSignUp(signUpData);
     return result;
   }
 
@@ -38,7 +38,7 @@ export class UsersController {
   @ApiExtraModels(AccountDto)
   @Post('/deleteinterviewer')
   async delInterviewer(@Body() accountDto: AccountDto): Promise<void> {
-    const result = await this.usersService.delInterviewer(accountDto);
+    const result = await this.usersService.delMember(accountDto);
     return result;
   }
 
@@ -60,24 +60,5 @@ export class UsersController {
   @Post('logout')
   signOut(@Req() req: Request & { user: { account: string; name: string; role: Role } }): any {
     return this.usersService.signOut(req);
-  }
-
-  @ApiHeader({
-    name: 'itvkey',
-  })
-  @ApiOperation({ summary: 'id 찾기' })
-  @ApiExtraModels(AccountDto)
-  @Post('finduserbyaccount')
-  async findUserByAccount(@Body() accountDto: AccountDto): Promise<any> {
-    const result = await this.usersService.findUserByAccount(accountDto);
-    return result;
-  }
-
-  @ApiOperation({ summary: 'id 찾기' })
-  @ApiExtraModels(AccountDto)
-  @Post('finduserbyid')
-  async findUserById(@Body() findUserByIdDto: FindUserByIdDto): Promise<any> {
-    const result = await this.usersService.findUserById(findUserByIdDto);
-    return result;
   }
 }

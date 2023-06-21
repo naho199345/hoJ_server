@@ -55,23 +55,4 @@ export class UsersController {
   signOut(@Req() req: Request & { user: { account: string; name: string; role: Role } }): any {
     return this.usersService.signOut(req);
   }
-<<<<<<< HEAD
-=======
-
-  @ApiOperation({ summary: 'id 찾기' })
-  @ApiExtraModels(AccountDto)
-  @Post('finduserbyaccount')
-  async findUserByAccount(@Body() accountDto: AccountDto): Promise<any> {
-    const result = await this.usersService.findUserByAccount(accountDto);
-    return result;
-  }
-
-  @ApiOperation({ summary: 'id 찾기' })
-  @ApiExtraModels(AccountDto)
-  @Post('finduserbyid')
-  async findUserById(@Body() findUserByIdDto: FindUserByIdDto): Promise<any> {
-    const result = await this.usersService.findUserById(findUserByIdDto);
-    return result;
-  }
->>>>>>> 8b8f8d1b3cc0038aa4c4586703f1ca3ca9bc6df3
 }

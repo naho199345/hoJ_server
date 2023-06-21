@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { AccountDto, FindUserByIdDto, SetPwdDto, SignUpDto } from './dto/users.dto';
+import { AccountDto, SetPwdDto, SignUpDto } from './dto/users.dto';
 import { ErrorMessage, Role } from 'src/common/enums';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
@@ -20,7 +20,7 @@ export class UsersService {
 
   private isDev = process.env.NODE_ENV === undefined;
 
-  async interviewerSignUp(signUpData: SignUpDto): Promise<void> {
+  async memberSignUp(signUpData: SignUpDto): Promise<void> {
     const { account, pwd, name, regId } = signUpData;
 
     const existingUser = await User.findOne({ where: { account }, select: ['account'] });
@@ -56,7 +56,7 @@ export class UsersService {
     await user.save();
   }
 
-  async delInterviewer(accountDto: AccountDto): Promise<void> {
+  async delMember(accountDto: AccountDto): Promise<void> {
     const { account } = accountDto;
     const encAccount = this.cryptoService.encryptString(account);
 
@@ -91,7 +91,7 @@ export class UsersService {
       path: '/',
       maxAge: 0,
     };
-    req.res.clearCookie('itvToken', cookieOptions);
+    req.res.clearCookie('hoJToken', cookieOptions);
   }
 
   async validateUser(
@@ -113,7 +113,7 @@ export class UsersService {
       expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRES'),
     });
     try {
-      req.res.cookie('itvToken', accessToken);
+      req.res.cookie('hoJToken', accessToken);
     } catch (error) {
       console.log(error);
     }
@@ -134,27 +134,5 @@ export class UsersService {
 
     const accessToken = await this.signJwt(req, { id, account, name });
     return { accessToken };
-  }
-
-  async findUserByAccount(accountDto: AccountDto): Promise<any> {
-    const encAccount = this.cryptoService.encryptString(accountDto.account);
-
-    const user = await User.findOne({ where: { account: encAccount }, select: ['id', 'account', 'name'] });
-
-    const { id, account, name } = user;
-
-    const decAccount = this.cryptoService.decryptString(account);
-    const decName = this.cryptoService.decryptString(name);
-
-    return { id, account: decAccount, name: decName };
-  }
-
-  async findUserById(findUserByIdDto: FindUserByIdDto): Promise<any> {
-    const { id } = findUserByIdDto;
-    const user = await User.findOne({ where: { id }, select: ['id', 'account', 'name'] });
-
-    const { account, name } = user;
-
-    return { id, account, name };
   }
 }

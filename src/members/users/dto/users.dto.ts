@@ -73,9 +73,3 @@ export class SetPwdDto {
   })
   readonly newPwd: string;
 }
-
-export class FindUserByIdDto {
-  @IsNumber()
-  @ApiProperty({ default: 1 })
-  readonly id: number;
-}

@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Req, Patch } from '@nestjs/common';
 import { ApiExtraModels, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AccountDto, FindUserByIdDto, SetPwdDto, SignInDto, SignUpDto } from './dto/users.dto';
+import { AccountDto, SetPwdDto, SignInDto, SignUpDto } from './dto/users.dto';
 import { UsersService } from './users.service';
 import { Role } from 'src/common/enums/Role';
 import { Public } from 'src/common/decorators';
@@ -16,7 +16,7 @@ export class UsersController {
   @ApiExtraModels(SignUpDto)
   @Post('/interviewer')
   async interviewerSignUp(@Body() signUpData: SignUpDto): Promise<void> {
-    const result = await this.usersService.interviewerSignUp(signUpData);
+    const result = await this.usersService.memberSignUp(signUpData);
     return result;
   }
 
@@ -32,7 +32,7 @@ export class UsersController {
   @ApiExtraModels(AccountDto)
   @Post('/deleteinterviewer')
   async delInterviewer(@Body() accountDto: AccountDto): Promise<void> {
-    const result = await this.usersService.delInterviewer(accountDto);
+    const result = await this.usersService.delMember(accountDto);
     return result;
   }
 
@@ -55,6 +55,8 @@ export class UsersController {
   signOut(@Req() req: Request & { user: { account: string; name: string; role: Role } }): any {
     return this.usersService.signOut(req);
   }
+<<<<<<< HEAD
+=======
 
   @ApiOperation({ summary: 'id 찾기' })
   @ApiExtraModels(AccountDto)
@@ -71,4 +73,5 @@ export class UsersController {
     const result = await this.usersService.findUserById(findUserByIdDto);
     return result;
   }
+>>>>>>> 8b8f8d1b3cc0038aa4c4586703f1ca3ca9bc6df3
 }

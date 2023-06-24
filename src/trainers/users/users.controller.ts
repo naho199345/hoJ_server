@@ -56,13 +56,7 @@ export class UsersController {
     return this.usersService.signOut(req);
   }
 
-  @ApiOperation({ summary: '인담자, 개인회원 토큰생성' })
-  @ApiExtraModels(AccountDto)
-  @Post('token')
-  async createToken(@Req() req: Request, @Body() body: AccountDto): Promise<{ accessToken: string }> {
-    const result = await this.usersService.createToken(req);
-    return result;
-  }
+
 
   // @ApiOperation({ summary: '비밀번호 초기화 토큰생성' })
   // @Public()

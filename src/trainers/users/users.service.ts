@@ -16,7 +16,7 @@ export class UsersService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly cryptoService: CryptoService,
-  ) {}
+  ) { }
 
   private isDev = process.env.NODE_ENV === undefined;
 
@@ -132,19 +132,5 @@ export class UsersService {
     }
 
     return accessToken;
-  }
-
-  async createToken(req: Request): Promise<{ accessToken: string }> {
-    const { account } = req.body;
-
-    const user = await User.findOne({ where: { account }, select: ['id', 'account', 'name'] });
-
-    if (!user) {
-      throw new HttpException('해당 계정의 방이 존재하지 않습니다.', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    const { id, name } = user;
-
-    const accessToken = await this.signJwt(req, { id, account, name });
-    return { accessToken };
   }
 }

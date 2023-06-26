@@ -56,8 +56,6 @@ export class UsersController {
     return this.usersService.signOut(req);
   }
 
-
-
   // @ApiOperation({ summary: '비밀번호 초기화 토큰생성' })
   // @Public()
   // @ApiExtraModels(CreateResetTokenDto)

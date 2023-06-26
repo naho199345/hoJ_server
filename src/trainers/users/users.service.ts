@@ -16,7 +16,7 @@ export class UsersService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly cryptoService: CryptoService,
-  ) {}
+  ) { }
 
   private isDev = process.env.NODE_ENV === undefined;
 
@@ -105,13 +105,6 @@ export class UsersService {
     userPassword: string,
   ): Promise<{ id: number; account: string; name: string }> {
     const user = await User.findOne({ where: { account: userAccount } });
-    // if (user.role !== Role.MANAGER) {
-    //   throw new UnauthorizedException(`해당 계정은 ${user.role}으로 등록되어 있습니다.`);
-    // }
-
-    // if (!user || !(await bcrypt.compare(userPassword, user.pwd))) {
-    //   throw new UnauthorizedException(ErrorMessage.auth_List_002);
-    // }
     const { id, name } = user;
     return { id, account: userAccount, name };
   }

@@ -55,22 +55,4 @@ export class UsersController {
   signOut(@Req() req: Request & { user: { account: string; name: string; role: Role } }): any {
     return this.usersService.signOut(req);
   }
-
-  // @ApiOperation({ summary: '비밀번호 초기화 토큰생성' })
-  // @Public()
-  // @ApiExtraModels(CreateResetTokenDto)
-  // @Post('sendemail')
-  // async sendEmail(@Body() createResetTokenDto: CreateResetTokenDto): Promise<any> {
-  //   const result = await this.usersService.sendEmail(createResetTokenDto);
-  //   return result;
-  // }
-
-  // @ApiOperation({ summary: '비밀번호 초기화' })
-  // @Public()
-  // @ApiExtraModels(ResetPwdDto)
-  // @Post('resetpwd')
-  // async resetPwd(@Body() resetPwdDto: ResetPwdDto): Promise<void> {
-  //   const result = await this.usersService.resetPwd(resetPwdDto);
-  //   return result;
-  // }
 }

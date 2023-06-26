@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { AccountDto, SetPwdDto, SignUpDto } from './dto/users.dto';
@@ -16,7 +16,7 @@ export class UsersService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly cryptoService: CryptoService,
-  ) { }
+  ) {}
 
   private isDev = process.env.NODE_ENV === undefined;
 

@@ -97,7 +97,7 @@ export class UsersService {
       path: '/',
       maxAge: 0,
     };
-    req.res.clearCookie('itvToken', cookieOptions);
+    req.res.clearCookie('hoJtoken', cookieOptions);
   }
 
   async validateUser(

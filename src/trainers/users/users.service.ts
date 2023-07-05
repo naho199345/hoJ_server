@@ -115,11 +115,7 @@ export class UsersService {
       expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRES'),
     });
     try {
-      if (!this.isDev) {
-        req.res.cookie('itvToken', accessToken, { domain: '.catchapply.co.kr', maxAge: 1000 * 60 * 60 * 24 });
-      } else {
-        req.res.cookie('itvToken', accessToken);
-      }
+      req.res.cookie('hoJtoken', accessToken);
     } catch (error) {
       console.log(error);
     }
